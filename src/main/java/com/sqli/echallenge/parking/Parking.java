@@ -45,7 +45,7 @@ final class Parking
         .filter(index -> (car != 'D' ? NonDisabledParkingBay.class : DisabledParkingBay.class)
             .isAssignableFrom(slots[index].getClass()))
         .filter(index -> slots[index].isAvailable())
-        .mapToObj(Integer::valueOf)
+        .boxed()
         .collect(Collectors.toMap(Function.identity(), index -> closestDistanceToPedestrianExit(index)))
         .entrySet()
         .stream()
