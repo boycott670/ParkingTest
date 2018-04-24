@@ -27,4 +27,48 @@ public class ParkingTest
     assertEquals("UUUUU\nU=UU@\n@U=UU\nUUUUU\nUUUUU", parking.toString());
     assertEquals(23, parking.getAvailableBays());
   }
+
+  @Test
+  public void testParkCarVehiculeTypeC()
+  {
+    assertEquals(7, parking.parkCar('C'));
+    assertEquals(22, parking.getAvailableBays());
+  }
+
+  @Test
+  public void testParkCarVehiculeTypeM()
+  {
+    assertEquals(7, parking.parkCar('M'));
+    assertEquals(22, parking.getAvailableBays());
+  }
+
+  @Test
+  public void testParkCarThreeVehicules()
+  {
+    assertEquals(7, parking.parkCar('C'));
+    assertEquals(22, parking.getAvailableBays());
+
+    assertEquals(9, parking.parkCar('M'));
+    assertEquals(21, parking.getAvailableBays());
+
+    assertEquals(11, parking.parkCar('V'));
+    assertEquals(20, parking.getAvailableBays());
+
+    assertEquals("UUUUU\nM=CU@\n@V=UU\nUUUUU\nUUUUU", parking.toString());
+  }
+
+  @Test
+  public void testParkCarDisabled()
+  {
+    assertEquals(10, parking.parkCar('D'));
+    assertEquals(22, parking.getAvailableBays());
+
+    assertEquals(5, parking.parkCar('D'));
+    assertEquals(21, parking.getAvailableBays());
+
+    assertEquals(-1, parking.parkCar('D'));
+    assertEquals(21, parking.getAvailableBays());
+
+    assertEquals("UUUUU\nU=UUD\nDU=UU\nUUUUU\nUUUUU", parking.toString());
+  }
 }

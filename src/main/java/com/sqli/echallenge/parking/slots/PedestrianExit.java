@@ -15,4 +15,10 @@ public final class PedestrianExit extends ParkingSlot
     return false;
   }
 
+  @Override
+  public void parkCar(char car)
+  {
+    throw new UnsupportedOperationException();
+  }
+
 }

@@ -9,4 +9,10 @@ public abstract class ParkingBay extends ParkingSlot
   {
     return parkedCar == null;
   }
+
+  @Override
+  public final void parkCar(char car)
+  {
+    parkedCar = car;
+  }
 }
