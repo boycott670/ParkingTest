@@ -64,6 +64,11 @@ final class Parking
     return slotIndexToPark;
   }
 
+  boolean unparkCar(final int slotIndexToUnpark)
+  {
+    return slots[slotIndexToUnpark].unparkCar();
+  }
+  
   @Override
   public String toString()
   {

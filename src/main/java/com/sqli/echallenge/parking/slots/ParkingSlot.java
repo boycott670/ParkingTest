@@ -7,4 +7,6 @@ public abstract class ParkingSlot
   public abstract boolean isAvailable();
 
   public abstract void parkCar(final char car);
+
+  public abstract boolean unparkCar();
 }

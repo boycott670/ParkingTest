@@ -21,4 +21,10 @@ public final class PedestrianExit extends ParkingSlot
     throw new UnsupportedOperationException();
   }
 
+  @Override
+  public boolean unparkCar()
+  {
+    return false;
+  }
+
 }

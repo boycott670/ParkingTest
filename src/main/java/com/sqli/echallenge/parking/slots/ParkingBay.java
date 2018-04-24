@@ -15,4 +15,17 @@ public abstract class ParkingBay extends ParkingSlot
   {
     parkedCar = car;
   }
+
+  @Override
+  public final boolean unparkCar()
+  {
+    if (!isAvailable())
+    {
+      parkedCar = null;
+      return true;
+    }
+
+    return false;
+  }
+
 }
