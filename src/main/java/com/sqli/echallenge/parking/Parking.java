@@ -1,6 +1,7 @@
 package com.sqli.echallenge.parking;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,6 +41,8 @@ final class Parking
 
   int parkCar(final char car)
   {
+    final Comparator<Entry<Integer, Integer>> distanceToClosestPedestrianExitComparator = Entry.comparingByValue();
+
     final int slotIndexToPark = IntStream.range(0, slots.length)
         .filter(index -> (car != 'D' ? NonDisabledParkingBay.class : DisabledParkingBay.class).isInstance(slots[index]))
         .filter(index -> slots[index].isAvailable())
@@ -47,7 +50,7 @@ final class Parking
         .collect(Collectors.toMap(Function.identity(), this::closestDistanceToPedestrianExit))
         .entrySet()
         .stream()
-        .sorted(Entry.comparingByValue())
+        .sorted(distanceToClosestPedestrianExitComparator.thenComparing(Entry.comparingByKey()))
         .findFirst()
         .map(Entry::getKey)
         .orElse(-1);
