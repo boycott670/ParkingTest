@@ -111,4 +111,30 @@ public class ParkingTest
 
     assertEquals(13, parking.parkCar('V'));
   }
+
+  @Test
+  public void testBuildBasicParking()
+  {
+    final Parking p = new ParkingBuilder().withSquareSize(4)
+        .build();
+    assertEquals(16, p.getAvailableBays());
+  }
+
+  @Test
+  public void testBuildParkingWithPedestrianExit()
+  {
+    final Parking p = new ParkingBuilder().withSquareSize(3)
+        .withPedestrianExit(5)
+        .build();
+    assertEquals(8, p.getAvailableBays());
+  }
+
+  @Test
+  public void testBuildParkingWithDisabledSlot()
+  {
+    final Parking p = new ParkingBuilder().withSquareSize(2)
+        .withDisabledBay(2)
+        .build();
+    assertEquals(4, p.getAvailableBays());
+  }
 }
