@@ -11,11 +11,6 @@ final class ParkingBuilder
 {
   private ParkingSlot[] parkingSlots;
 
-  ParkingBuilder()
-  {
-
-  }
-
   ParkingBuilder withSquareSize(final int size)
   {
     parkingSlots = IntStream.range(0, size * size)
