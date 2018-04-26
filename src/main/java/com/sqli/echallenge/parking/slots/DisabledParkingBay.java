@@ -6,7 +6,7 @@ public final class DisabledParkingBay extends ParkingBay
   @Override
   public String toString()
   {
-    return isAvailable() ? "@" : "D";
+    return isAvailable() ? "@" : super.toString();
   }
 
 }

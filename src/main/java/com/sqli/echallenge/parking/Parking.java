@@ -1,19 +1,16 @@
 package com.sqli.echallenge.parking;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
+import com.sqli.echallenge.parking.parkers.DefaultVehiclesParker;
+import com.sqli.echallenge.parking.parkers.VehiclesParker;
 import com.sqli.echallenge.parking.slots.ParkingBay;
-import com.sqli.echallenge.parking.vehicles.Vehicle;
 
 final class Parking
 {
+  private final VehiclesParker parker = new DefaultVehiclesParker();
   private final ParkingBay[] bays;
 
   Parking(final ParkingBay[] bays)
@@ -29,44 +26,9 @@ final class Parking
         .count();
   }
 
-  private int closestDistanceToPedestrianExit(final int slotIndex)
-  {
-    return IntStream.range(0, bays.length)
-        .filter(index -> index != slotIndex)
-        .filter(index -> bays[index] == null)
-        .map(index -> index - slotIndex)
-        .map(Math::abs)
-        .min()
-        .getAsInt();
-  }
-
   int parkVehicle(final char vehcile)
   {
-    final Vehicle vehicleToPark = VehiclesFactory.get(vehcile);
-
-    final Comparator<Entry<Integer, Integer>> distanceToClosestPedestrianExitComparator = Entry.comparingByValue();
-
-    final int slotIndexToPark = IntStream.range(0, bays.length)
-        .filter(index -> vehicleToPark.appropriateSlot()
-            .isInstance(bays[index]))
-        .filter(index -> bays[index].isAvailable())
-        .boxed()
-        .collect(Collectors.toMap(Function.identity(), this::closestDistanceToPedestrianExit))
-        .entrySet()
-        .stream()
-        .sorted(distanceToClosestPedestrianExitComparator.thenComparing(Entry.comparingByKey()))
-        .findFirst()
-        .map(Entry::getKey)
-        .orElse(-1);
-
-    if (slotIndexToPark == -1)
-    {
-      return slotIndexToPark;
-    }
-
-    bays[slotIndexToPark].parkCar(vehcile);
-
-    return slotIndexToPark;
+    return parker.parkVehicle(VehiclesFactory.get(vehcile), bays);
   }
 
   boolean unparkCar(final int slotIndexToUnpark)
@@ -75,7 +37,7 @@ final class Parking
         .map(ParkingBay::unparkCar)
         .orElse(false);
   }
-  
+
   @Override
   public String toString()
   {
@@ -96,11 +58,13 @@ final class Parking
             .orElse("="));
       }
 
-      report.append(reverseLane ? laneReport.reverse() : laneReport).append("\n");
+      report.append(reverseLane ? laneReport.reverse() : laneReport)
+          .append("\n");
 
       reverseLane = !reverseLane;
     }
 
-    return report.toString().trim();
+    return report.toString()
+        .trim();
   }
 }

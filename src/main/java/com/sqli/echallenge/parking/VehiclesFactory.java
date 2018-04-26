@@ -22,10 +22,10 @@ final class VehiclesFactory
   {
     final Map<? super Character, Supplier<? extends Vehicle>> factory = new HashMap<>();
 
-    factory.put('C', Car::new);
-    factory.put('M', MotorCycle::new);
-    factory.put('V', Bike::new);
-    factory.put('D', DisabledVehcile::new);
+    factory.put(Car.CODE, Car::new);
+    factory.put(MotorCycle.CODE, MotorCycle::new);
+    factory.put(Bike.CODE, Bike::new);
+    factory.put(DisabledVehcile.CODE, DisabledVehcile::new);
 
     return Optional.ofNullable(factory.get(vehcileCode))
         .orElseThrow(IllegalArgumentException::new)

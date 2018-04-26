@@ -1,28 +1,36 @@
 package com.sqli.echallenge.parking.slots;
 
+import com.sqli.echallenge.parking.vehicles.Vehicle;
+
 public abstract class ParkingBay
 {
-  Character parkedCar;
+  Vehicle parkedVehicle;
 
   public final boolean isAvailable()
   {
-    return parkedCar == null;
+    return parkedVehicle == null;
   }
 
-  public final void parkCar(char car)
+  public final void parkCar(final Vehicle vehicle)
   {
-    parkedCar = car;
+    parkedVehicle = vehicle;
   }
 
   public final boolean unparkCar()
   {
     if (!isAvailable())
     {
-      parkedCar = null;
+      parkedVehicle = null;
       return true;
     }
 
     return false;
+  }
+
+  @Override
+  public String toString()
+  {
+    return parkedVehicle.toString();
   }
 
 }
