@@ -1,7 +1,5 @@
 package com.sqli.echallenge.parking;
 
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.sqli.echallenge.parking.slots.DisabledParkingBay;
@@ -33,19 +31,8 @@ final class ParkingBuilder
     return this;
   }
 
-  private boolean containsPedestrianExit()
-  {
-    return Arrays.stream(parkingBays)
-        .anyMatch(Objects::isNull);
-  }
-
   Parking build()
   {
-    if (!containsPedestrianExit())
-    {
-      throw new IllegalStateException("The parking must contain at least one pedestrian exit");
-    }
-
     return new Parking(parkingBays);
   }
 }
