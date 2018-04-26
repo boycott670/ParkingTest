@@ -9,9 +9,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.sqli.echallenge.parking.slots.DisabledParkingBay;
-import com.sqli.echallenge.parking.slots.NonDisabledParkingBay;
 import com.sqli.echallenge.parking.slots.ParkingBay;
+import com.sqli.echallenge.parking.vehicles.Vehicle;
 
 final class Parking
 {
@@ -41,12 +40,15 @@ final class Parking
         .getAsInt();
   }
 
-  int parkCar(final char car)
+  int parkVehicle(final char vehcile)
   {
+    final Vehicle vehicleToPark = VehiclesFactory.get(vehcile);
+
     final Comparator<Entry<Integer, Integer>> distanceToClosestPedestrianExitComparator = Entry.comparingByValue();
 
     final int slotIndexToPark = IntStream.range(0, bays.length)
-        .filter(index -> (car != 'D' ? NonDisabledParkingBay.class : DisabledParkingBay.class).isInstance(bays[index]))
+        .filter(index -> vehicleToPark.appropriateSlot()
+            .isInstance(bays[index]))
         .filter(index -> bays[index].isAvailable())
         .boxed()
         .collect(Collectors.toMap(Function.identity(), this::closestDistanceToPedestrianExit))
@@ -62,7 +64,7 @@ final class Parking
       return slotIndexToPark;
     }
 
-    bays[slotIndexToPark].parkCar(car);
+    bays[slotIndexToPark].parkCar(vehcile);
 
     return slotIndexToPark;
   }

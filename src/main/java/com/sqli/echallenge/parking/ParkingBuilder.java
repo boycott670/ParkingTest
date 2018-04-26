@@ -3,7 +3,7 @@ package com.sqli.echallenge.parking;
 import java.util.stream.IntStream;
 
 import com.sqli.echallenge.parking.slots.DisabledParkingBay;
-import com.sqli.echallenge.parking.slots.NonDisabledParkingBay;
+import com.sqli.echallenge.parking.slots.EnabledParkingBay;
 import com.sqli.echallenge.parking.slots.ParkingBay;
 
 final class ParkingBuilder
@@ -13,7 +13,7 @@ final class ParkingBuilder
   ParkingBuilder withSquareSize(final int size)
   {
     parkingBays = IntStream.range(0, size * size)
-        .mapToObj(__ -> new NonDisabledParkingBay())
+        .mapToObj(__ -> new EnabledParkingBay())
         .toArray(ParkingBay[]::new);
 
     return this;

@@ -33,27 +33,27 @@ public class ParkingTest
   @Test
   public void testParkCarVehiculeTypeC()
   {
-    assertEquals(7, parking.parkCar('C'));
+    assertEquals(7, parking.parkVehicle('C'));
     assertEquals(22, parking.getAvailableBays());
   }
 
   @Test
   public void testParkCarVehiculeTypeM()
   {
-    assertEquals(7, parking.parkCar('M'));
+    assertEquals(7, parking.parkVehicle('M'));
     assertEquals(22, parking.getAvailableBays());
   }
 
   @Test
   public void testParkCarThreeVehicules()
   {
-    assertEquals(7, parking.parkCar('C'));
+    assertEquals(7, parking.parkVehicle('C'));
     assertEquals(22, parking.getAvailableBays());
 
-    assertEquals(9, parking.parkCar('M'));
+    assertEquals(9, parking.parkVehicle('M'));
     assertEquals(21, parking.getAvailableBays());
 
-    assertEquals(11, parking.parkCar('V'));
+    assertEquals(11, parking.parkVehicle('V'));
     assertEquals(20, parking.getAvailableBays());
 
     assertEquals("UUUUU\nM=CU@\n@V=UU\nUUUUU\nUUUUU", parking.toString());
@@ -62,13 +62,13 @@ public class ParkingTest
   @Test
   public void testParkCarDisabled()
   {
-    assertEquals(10, parking.parkCar('D'));
+    assertEquals(10, parking.parkVehicle('D'));
     assertEquals(22, parking.getAvailableBays());
 
-    assertEquals(5, parking.parkCar('D'));
+    assertEquals(5, parking.parkVehicle('D'));
     assertEquals(21, parking.getAvailableBays());
 
-    assertEquals(-1, parking.parkCar('D'));
+    assertEquals(-1, parking.parkVehicle('D'));
     assertEquals(21, parking.getAvailableBays());
 
     assertEquals("UUUUU\nU=UUD\nDU=UU\nUUUUU\nUUUUU", parking.toString());
@@ -77,12 +77,12 @@ public class ParkingTest
   @Test
   public void testUnparkCar()
   {
-    final int firstCarBayIndex = parking.parkCar('C');
+    final int firstCarBayIndex = parking.parkVehicle('C');
     assertTrue(parking.unparkCar(firstCarBayIndex));
     assertEquals(23, parking.getAvailableBays());
     assertFalse(parking.unparkCar(firstCarBayIndex));
 
-    final int secondCarBayIndex = parking.parkCar('D');
+    final int secondCarBayIndex = parking.parkVehicle('D');
     assertTrue(parking.unparkCar(secondCarBayIndex));
     assertEquals(23, parking.getAvailableBays());
     assertFalse(parking.unparkCar(secondCarBayIndex));
@@ -93,13 +93,13 @@ public class ParkingTest
   @Test
   public void testUnparkCarToString()
   {
-    assertEquals(7, parking.parkCar('C'));
-    assertEquals(9, parking.parkCar('C'));
-    assertEquals(11, parking.parkCar('M'));
-    assertEquals(13, parking.parkCar('M'));
-    assertEquals(10, parking.parkCar('D'));
-    assertEquals(5, parking.parkCar('D'));
-    assertEquals(-1, parking.parkCar('D'));
+    assertEquals(7, parking.parkVehicle('C'));
+    assertEquals(9, parking.parkVehicle('C'));
+    assertEquals(11, parking.parkVehicle('M'));
+    assertEquals(13, parking.parkVehicle('M'));
+    assertEquals(10, parking.parkVehicle('D'));
+    assertEquals(5, parking.parkVehicle('D'));
+    assertEquals(-1, parking.parkVehicle('D'));
 
     assertFalse(parking.unparkCar(3));
     assertEquals("UUUUU\nC=CUD\nDM=MU\nUUUUU\nUUUUU", parking.toString());
@@ -109,7 +109,7 @@ public class ParkingTest
     assertEquals("UUUUU\nC=CUD\nDM=UU\nUUUUU\nUUUUU", parking.toString());
     assertEquals(18, parking.getAvailableBays());
 
-    assertEquals(13, parking.parkCar('V'));
+    assertEquals(13, parking.parkVehicle('V'));
   }
 
   @Test

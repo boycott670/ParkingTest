@@ -1,6 +1,6 @@
 package com.sqli.echallenge.parking.slots;
 
-public final class NonDisabledParkingBay extends ParkingBay
+public final class EnabledParkingBay extends ParkingBay
 {
 
   @Override
