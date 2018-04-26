@@ -3,36 +3,38 @@ package com.sqli.echallenge.parking;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.sqli.echallenge.parking.slots.DisabledParkingBay;
 import com.sqli.echallenge.parking.slots.NonDisabledParkingBay;
-import com.sqli.echallenge.parking.slots.ParkingSlot;
-import com.sqli.echallenge.parking.slots.PedestrianExit;
+import com.sqli.echallenge.parking.slots.ParkingBay;
 
 final class Parking
 {
-  private final ParkingSlot[] slots;
+  private final ParkingBay[] bays;
 
-  Parking(final ParkingSlot[] slots)
+  Parking(final ParkingBay[] bays)
   {
-    this.slots = slots;
+    this.bays = bays;
   }
 
   long getAvailableBays()
   {
-    return Arrays.stream(slots)
-        .filter(ParkingSlot::isAvailable)
+    return Arrays.stream(bays)
+        .filter(Objects::nonNull)
+        .filter(ParkingBay::isAvailable)
         .count();
   }
 
   private int closestDistanceToPedestrianExit(final int slotIndex)
   {
-    return IntStream.range(0, slots.length)
+    return IntStream.range(0, bays.length)
         .filter(index -> index != slotIndex)
-        .filter(index -> slots[index] instanceof PedestrianExit)
+        .filter(index -> bays[index] == null)
         .map(index -> index - slotIndex)
         .map(Math::abs)
         .min()
@@ -43,9 +45,9 @@ final class Parking
   {
     final Comparator<Entry<Integer, Integer>> distanceToClosestPedestrianExitComparator = Entry.comparingByValue();
 
-    final int slotIndexToPark = IntStream.range(0, slots.length)
-        .filter(index -> (car != 'D' ? NonDisabledParkingBay.class : DisabledParkingBay.class).isInstance(slots[index]))
-        .filter(index -> slots[index].isAvailable())
+    final int slotIndexToPark = IntStream.range(0, bays.length)
+        .filter(index -> (car != 'D' ? NonDisabledParkingBay.class : DisabledParkingBay.class).isInstance(bays[index]))
+        .filter(index -> bays[index].isAvailable())
         .boxed()
         .collect(Collectors.toMap(Function.identity(), this::closestDistanceToPedestrianExit))
         .entrySet()
@@ -60,14 +62,16 @@ final class Parking
       return slotIndexToPark;
     }
 
-    slots[slotIndexToPark].parkCar(car);
+    bays[slotIndexToPark].parkCar(car);
 
     return slotIndexToPark;
   }
 
   boolean unparkCar(final int slotIndexToUnpark)
   {
-    return slots[slotIndexToUnpark].unparkCar();
+    return Optional.ofNullable(bays[slotIndexToUnpark])
+        .map(ParkingBay::unparkCar)
+        .orElse(false);
   }
   
   @Override
@@ -75,7 +79,7 @@ final class Parking
   {
     final StringBuilder report = new StringBuilder();
 
-    final int numberOfLanes = (int) Math.sqrt(slots.length);
+    final int numberOfLanes = (int) Math.sqrt(bays.length);
 
     boolean reverseLane = false;
 
@@ -85,7 +89,9 @@ final class Parking
 
       for (int slotIndex = laneIndex * numberOfLanes; slotIndex < laneIndex * numberOfLanes + numberOfLanes; slotIndex++)
       {
-        laneReport.append(slots[slotIndex]);
+        laneReport.append(Optional.ofNullable(bays[slotIndex])
+            .map(Object::toString)
+            .orElse("="));
       }
 
       report.append(reverseLane ? laneReport.reverse() : laneReport).append("\n");

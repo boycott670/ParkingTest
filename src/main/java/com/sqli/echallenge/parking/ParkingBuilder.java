@@ -1,42 +1,42 @@
 package com.sqli.echallenge.parking;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.sqli.echallenge.parking.slots.DisabledParkingBay;
 import com.sqli.echallenge.parking.slots.NonDisabledParkingBay;
-import com.sqli.echallenge.parking.slots.ParkingSlot;
-import com.sqli.echallenge.parking.slots.PedestrianExit;
+import com.sqli.echallenge.parking.slots.ParkingBay;
 
 final class ParkingBuilder
 {
-  private ParkingSlot[] parkingSlots;
+  private ParkingBay[] parkingBays;
 
   ParkingBuilder withSquareSize(final int size)
   {
-    parkingSlots = IntStream.range(0, size * size)
+    parkingBays = IntStream.range(0, size * size)
         .mapToObj(__ -> new NonDisabledParkingBay())
-        .toArray(ParkingSlot[]::new);
+        .toArray(ParkingBay[]::new);
 
     return this;
   }
 
   ParkingBuilder withPedestrianExit(final int pedestrianExitSlotIndex)
   {
-    parkingSlots[pedestrianExitSlotIndex] = new PedestrianExit();
+    parkingBays[pedestrianExitSlotIndex] = null;
     return this;
   }
 
   ParkingBuilder withDisabledBay(final int disabledBaySlotIndex)
   {
-    parkingSlots[disabledBaySlotIndex] = new DisabledParkingBay();
+    parkingBays[disabledBaySlotIndex] = new DisabledParkingBay();
     return this;
   }
 
   private boolean containsPedestrianExit()
   {
-    return Arrays.stream(parkingSlots)
-        .anyMatch(PedestrianExit.class::isInstance);
+    return Arrays.stream(parkingBays)
+        .anyMatch(Objects::isNull);
   }
 
   Parking build()
@@ -46,6 +46,6 @@ final class ParkingBuilder
       throw new IllegalStateException("The parking must contain at least one pedestrian exit");
     }
 
-    return new Parking(parkingSlots);
+    return new Parking(parkingBays);
   }
 }
