@@ -4,18 +4,29 @@ import java.util.Arrays;
 
 import com.sqli.echallenge.parking.entities.ParkingBay;
 import com.sqli.echallenge.parking.entities.ParkingSlot;
-import com.sqli.echallenge.parking.visitors.DefaultParkingDrawerVisitor;
-import com.sqli.echallenge.parking.visitors.ParkingDrawerVisitor;
+import com.sqli.echallenge.parking.visitors.DefaultParkingDrawer;
+import com.sqli.echallenge.parking.visitors.DisabledParkingKeeper;
+import com.sqli.echallenge.parking.visitors.NonDisabledParkingKeeper;
+import com.sqli.echallenge.parking.visitors.ParkingDrawer;
+import com.sqli.echallenge.parking.visitors.ParkingKeeper;
 
 public final class Parking
 {
-	private final ParkingDrawerVisitor parkingDrawerVisitor;
+	private final ParkingDrawer parkingDrawer;
+	
+	private final ParkingKeeper nonDisabledParkingKeeper;
+	
+	private final ParkingKeeper disabledParkingKeeper;
 	
 	private final ParkingSlot[] slots;
 
 	public Parking(ParkingSlot[] slots)
 	{
-		parkingDrawerVisitor = new DefaultParkingDrawerVisitor();
+		parkingDrawer = new DefaultParkingDrawer();
+		
+		nonDisabledParkingKeeper = new NonDisabledParkingKeeper();
+		
+		disabledParkingKeeper = new DisabledParkingKeeper();
 		
 		this.slots = slots;
 	}
@@ -23,11 +34,11 @@ public final class Parking
 	@Override
 	public String toString()
 	{
-		parkingDrawerVisitor.clear();
+		parkingDrawer.clear();
 		
-		Arrays.stream(slots).forEachOrdered(parkingDrawerVisitor::visit);
+		Arrays.stream(slots).forEachOrdered(parkingDrawer::visit);
 		
-		return parkingDrawerVisitor.draw();
+		return parkingDrawer.draw();
 	}
 	
 	public long getAvailableBays()
@@ -37,5 +48,37 @@ public final class Parking
 				.map(ParkingBay.class::cast)
 				.filter(ParkingBay::isEmpty)
 				.count();
+	}
+	
+	public int parkCar(final char car)
+	{
+		final ParkingKeeper appropriateParkingKeeper;
+		
+		if (car == 'D')
+		{
+			disabledParkingKeeper.clear();
+			
+			Arrays.stream(slots).forEachOrdered(disabledParkingKeeper::visit);
+			
+			appropriateParkingKeeper = disabledParkingKeeper;
+		}
+		else
+		{
+			nonDisabledParkingKeeper.clear();
+			
+			Arrays.stream(slots).forEachOrdered(nonDisabledParkingKeeper::visit);
+			
+			appropriateParkingKeeper = nonDisabledParkingKeeper;
+		}
+		
+		final int nextAvailableParkingBayIndex = Arrays.asList(slots).indexOf(appropriateParkingKeeper.nextAvailableParkingBay());
+		
+		if (nextAvailableParkingBayIndex != -1)
+		{
+			((ParkingBay)slots[nextAvailableParkingBayIndex]).parkCar(car);
+			
+		}
+
+		return nextAvailableParkingBayIndex;
 	}
 }

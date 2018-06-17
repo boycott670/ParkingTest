@@ -7,24 +7,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.sqli.echallenge.parking.entities.ParkingSlot;
-
-public final class DefaultParkingDrawerVisitor implements ParkingDrawerVisitor
+public final class DefaultParkingDrawer extends ParkingDrawer
 {
-
-	private final List<ParkingSlot> parkingSlots = new ArrayList<>();
-
-	@Override
-	public void visit(ParkingSlot parkingSlot)
-	{
-		parkingSlots.add(parkingSlot);
-	}
-
-	@Override
-	public void clear()
-	{
-		parkingSlots.clear();
-	}
 
 	private List<String> getParkingSlotRowDrawings(final int parkingSlotsRowSize)
 	{
