@@ -1,6 +1,8 @@
 package com.sqli.echallenge.parking;
 
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 import com.sqli.echallenge.parking.entities.ParkingBay;
 import com.sqli.echallenge.parking.entities.ParkingSlot;
@@ -80,5 +82,24 @@ public final class Parking
 		}
 
 		return nextAvailableParkingBayIndex;
+	}
+	
+	public boolean unparkCar(final int slotIndex)
+	{
+		final Optional<ParkingBay> bayToUnslot = Optional.of(slots[slotIndex])
+				.filter(ParkingBay.class::isInstance)
+				.map(ParkingBay.class::cast)
+				.filter(((Predicate<ParkingBay>) ParkingBay::isEmpty).negate());
+		
+		if (bayToUnslot.isPresent())
+		{
+			bayToUnslot.get().unparkCar();
+			
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
